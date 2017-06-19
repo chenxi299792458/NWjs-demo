@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+	<div id="counter-event-example">
+		<list-component></list-component>
+		<detail-component></detail-component>
+	</div>
+</body>
+<script src="js/vue.js"></script>
+<script src="js/vuex.js"></script>
+<script>
+	var win = nw.Window.get();
+	win.showDevTools();
+	// 列表-详情
+	// 使用Vuex
+	var store = new Vuex.Store({
+		state: {
+			selectItem: {}
+		},
+		mutations: {
+			updateSelectItem: function (state, payload) {
+				state.selectItem = payload.item;
+			},
+		},
+		getters: {
+			getSelectItem: function (state) {
+				return state.selectItem;
+			}
+		}
+	})
+	Vue.component('list-component', {
+		template: '<div>\
+					   <div v-for="item in items">\
+							<div @click="selectItem(item)">{{item.name}}</div>\
+					   </div>\
+				   </div>',
+		data: function () {
+			return {
+				items: [{
+						name: "xiangshang0",
+						info: "xiangshang0-info"
+					},
+					{
+						name: "xiangshang1",
+						info: "xiangshang1-info"
+					},
+					{
+						name: "xiangshang2",
+						info: "xiangshang2-info"
+					},
+					{
+						name: "xiangshang3",
+						info: "xiangshang3-info"
+					},
+					{
+						name: "xiangshang4",
+						info: "xiangshang4-info"
+					}
+				]
+			}
+		},
+		methods: {
+			selectItem: function (item) {
+				this.$store.commit("updateSelectItem", {
+					item: item
+				})
+			}
+		},
+	})
+	Vue.component('detail-component', {
+		template: '<div>\
+						<div>{{item.name}}   {{item.info}}</div>\
+					</div>',
+		computed: {
+			item: function () {
+				return this.$store.getters.getSelectItem;
+			}
+		}
+	})
+	new Vue({
+		el: '#counter-event-example',
+		store
+	})
+</script>
+</html>

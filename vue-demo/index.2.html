@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+	<div id="counter-event-example">
+		<list-component></list-component>
+		<detail-component></detail-component>
+	</div>
+</body>
+<script src="js/vue.js"></script>
+<script>
+	var win = nw.Window.get();
+	win.showDevTools();
+	var bus = new Vue();
+	// 列表-详情
+	// 使用eventBus
+	Vue.component('list-component', {
+		template: '<div>\
+					   <div v-for="item in items">\
+							<div @click="selectItem(item)">{{item.name}}</div>\
+					   </div>\
+				   </div>',
+		data: function () {
+			return {
+				msg: "123123",
+				items: [{
+						name: "xiangshang0",
+						info: "xiangshang0-info"
+					},
+					{
+						name: "xiangshang1",
+						info: "xiangshang1-info"
+					},
+					{
+						name: "xiangshang2",
+						info: "xiangshang2-info"
+					},
+					{
+						name: "xiangshang3",
+						info: "xiangshang3-info"
+					},
+					{
+						name: "xiangshang4",
+						info: "xiangshang4-info"
+					}
+				]
+			}
+		},
+		methods: {
+			selectItem: function (item) {
+				bus.$emit("selectItem", item);
+			}
+		},
+	})
+	Vue.component('detail-component', {
+		template: '<div>\
+						<div>{{item.name}}{{item.info}}</div>\
+					</div>',
+		data: function(){
+			return {
+				item: {}
+			}
+		},
+		created: function () {
+			bus.$on("selectItem", (item)=>{
+				this.item = item;
+			});
+		}
+	})
+	new Vue({
+		el: '#counter-event-example'
+	})
+</script>
+</html>
